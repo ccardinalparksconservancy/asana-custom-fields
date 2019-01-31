@@ -2,7 +2,7 @@ import asana
 from datetime import datetime, timedelta
 import re
 
-def getSectionGID():
+def getSectionGid():
     # get all sections associated with the project
     sections = client.sections.find_by_project(projectId)
     # get only the section we care about -- 'New Requests'
@@ -33,7 +33,7 @@ def parseCustomFieldSettings():
         # the global id of the custom field
         gid = cf['custom_field']['gid']
 
-        # the top-level keys is the custom field name
+        # the top-level keys are the custom field names
         tmpDict[name] = {}
 
         # if the custom field is an enum, track both custom field Id and custom field value Id
@@ -51,7 +51,6 @@ def parseCustomFieldSettings():
 
 def parseNotes():
     # create a list of strings of the key/value pairs
-    # notesList = notes.split('\n')
     notesList = notes.split('||')
     # temporary dict to be returned
     tmpDict = {}
@@ -74,14 +73,14 @@ def parseNotes():
 def padTicketId(fieldValue):
     splitValues = fieldValue.split('-')
     if len(splitValues) < 2:
-        raise Exception('The field value for Ticket Id is malformed!')
+        raise Exception('The field value for TicketId is malformed: {fieldValue}'.format(fieldValue = fieldValue))
     else:
         projectValue = splitValues[0]
         idValue = splitValues[1]
         if len(idValue) < 5:
             idValue = '0' * (5 - len(idValue)) + idValue
         else:
-            idValue = '00000'
+            raise Exception('There is something wrong with the numerical part of the TicketId value: {idValue}'.format(idValue = idValue))
 
     newFieldValue = projectValue + '-' + idValue
     return newFieldValue
@@ -110,7 +109,7 @@ def getCustomFieldData(data):
     # add the custom field info for the api_updated field
     data['custom_fields'][apiCustomFieldId] = apiCustomFieldValueId
     
-    # add a due date
+    # add a due date -- this is done in Forms now
     # due_on = datetime.now().date() + timedelta(days=7)
     # due_on = due_on.strftime('%Y-%m-%d')
     # data['due_on'] = due_on
@@ -118,7 +117,7 @@ def getCustomFieldData(data):
     return data
 
 if __name__ == "__main__":
-    # personal access token from asana developers portal
+    # personal access token from asana developers portal: https://app.asana.com/0/1101638289721813/board
     with open('asana-pat.txt', 'r') as f: 
         pat = f.readline()
 
@@ -141,23 +140,21 @@ if __name__ == "__main__":
 
     # loop through each project
     for projectId in projectIds:
-        # check to see if there are tasks that need updating
-
+        ## check to see if there are tasks that need updating
         # first get the section global Id
-        sectionGid = getSectionGID()
+        sectionGid = getSectionGid()
 
         # now find all tasks in the section
         tasks = client.tasks.find_by_section(sectionGid)
         
-        # extract tasks that have not been updated by this script
-        # store results in array
+        # extract tasks that have not been updated by this script and store results in array
         updateableTasks = getUpdateableTasks()
                 
-        # check to see if we have tasks to update
+        # if we have tasks to update
         if len(updateableTasks) > 0:
             # get the project's custom field settings
             customFieldSettings = client.custom_field_settings.find_by_project(projectId)
-
+            # create a dict based on custom field Id's and value Id's
             customFieldDict = parseCustomFieldSettings()    
         
             # iterate over each task
@@ -165,7 +162,7 @@ if __name__ == "__main__":
                 # get the task global Id
                 taskGid = task['gid']
                 
-                # get the custom field Id and value for the api_updated custom field
+                # get the custom field Id and value for the 'api_updated' custom field
                 apiCustomFieldId = customFieldDict[apiUpdatedField]['yes']['customFieldId']
                 apiCustomFieldValueId = customFieldDict[apiUpdatedField]['yes']['customFieldValueId']
                 
@@ -183,11 +180,11 @@ if __name__ == "__main__":
                 # for key in data.keys():
                 #     print('{key}, {value}').format(key = key, value = data[key])
 
-                # update the current task's field if the field name from Notes is present in the custom field settings
+                # update the current task's fields with data from the Notes area
                 try:
                     client.tasks.update(taskGid, data)
                 except:
-                    print('There was a problem updating the field via the API')
+                    print('There was a problem updating the fields in task {taskGid} via the API').format(taskGid = taskGid)
                     for key in data.keys():
                         print('{key}, {value}').format(key = key, value = data[key])
 
