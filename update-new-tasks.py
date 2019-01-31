@@ -1,7 +1,8 @@
 import asana
 from datetime import datetime, timedelta
+import re
 
-def getSectionGID(projectId, sectionName):
+def getSectionGID():
     # get all sections associated with the project
     sections = client.sections.find_by_project(projectId)
     # get only the section we care about -- 'New Requests'
@@ -9,7 +10,7 @@ def getSectionGID(projectId, sectionName):
     # return the section global Id
     return section['gid']
 
-def getUpdateableTasks(tasks):
+def getUpdateableTasks():
     tmpList = []
     for task in tasks:
         taskGid = task['gid']
@@ -19,7 +20,7 @@ def getUpdateableTasks(tasks):
             tmpList.append(t)
     return tmpList
 
-def getCustomFieldDict(customFieldSettings):
+def parseCustomFieldSettings():
     # use a temporary dict to store custom field information
     tmpDict = {}
 
@@ -48,9 +49,10 @@ def getCustomFieldDict(customFieldSettings):
     
     return tmpDict
 
-def getNotesAsDict(notes):
+def parseNotes():
     # create a list of strings of the key/value pairs
-    notesList = notes.split('\n')
+    # notesList = notes.split('\n')
+    notesList = notes.split('||')
     # temporary dict to be returned
     tmpDict = {}
 
@@ -58,18 +60,37 @@ def getNotesAsDict(notes):
     for line in notesList:
         # split on colon to separate field/value
         tmpList = line.split('|')
+
         # if we've parsed a field/value, add it to the dict: key=field name, value=field value
         if len(tmpList) > 1:
-            tmpDict[tmpList[0].strip()] = tmpList[1].strip()
+            fieldLabel = tmpList[0].strip()
+            fieldValue = tmpList[1].strip()
+            if fieldLabel == 'TicketId':
+                fieldValue = padTicketId(fieldValue)
+            tmpDict[fieldLabel] = fieldValue
 
     return tmpDict
 
-def getCustomFieldData(notesDict, customFieldDict, customFieldSettings):
-    data = { 'custom_fields': {} }
+def padTicketId(fieldValue):
+    splitValues = fieldValue.split('-')
+    if len(splitValues) < 2:
+        raise Exception('The field value for Ticket Id is malformed!')
+    else:
+        projectValue = splitValues[0]
+        idValue = splitValues[1]
+        if len(idValue) < 5:
+            idValue = '0' * (5 - len(idValue)) + idValue
+        else:
+            idValue = '00000'
+
+    newFieldValue = projectValue + '-' + idValue
+    return newFieldValue
+
+def getCustomFieldData(data):
     # iterate over each field extracted from the Notes
     for fieldName in notesDict.keys():
         # ensure that the field name from Notes is valid
-        if (fieldName in customFieldDict.keys()):
+        if (fieldName != 'notes' and fieldName in customFieldDict.keys()):
             # get the associated custom field settings for the current field
             customFieldSettings = customFieldDict[fieldName]
 
@@ -90,9 +111,9 @@ def getCustomFieldData(notesDict, customFieldDict, customFieldSettings):
     data['custom_fields'][apiCustomFieldId] = apiCustomFieldValueId
     
     # add a due date
-    due_on = datetime.now().date() + timedelta(days=7)
-    due_on = due_on.strftime('%Y-%m-%d')
-    data['due_on'] = due_on
+    # due_on = datetime.now().date() + timedelta(days=7)
+    # due_on = due_on.strftime('%Y-%m-%d')
+    # data['due_on'] = due_on
 
     return data
 
@@ -106,11 +127,11 @@ if __name__ == "__main__":
 
     # specify the project IDs
     pycProjectId = 1101667914088903
-    gisProjectId = 0
+    agolProjectId = 1101638289721813
     nrdbProjectId = 0
 
     # make an array of project Ids to iterate
-    projectIds = [pycProjectId]
+    projectIds = [pycProjectId, agolProjectId]
 
     # we're only concerned with tasks in the 'New Requests' board
     sectionName = 'New Requests'
@@ -118,34 +139,26 @@ if __name__ == "__main__":
     # api field
     apiUpdatedField = 'api_updated'
 
-    # specify the project IDs
-    pycProjectId = 1101667914088903
-    gisProjectId = 0
-    nrdbProjectId = 0
-
-    # make an array of project Ids to iterate
-    projectIds = [pycProjectId]
-
     # loop through each project
     for projectId in projectIds:
         # check to see if there are tasks that need updating
 
         # first get the section global Id
-        sectionGid = getSectionGID(projectId, sectionName)
+        sectionGid = getSectionGID()
 
         # now find all tasks in the section
         tasks = client.tasks.find_by_section(sectionGid)
         
         # extract tasks that have not been updated by this script
         # store results in array
-        updateableTasks = getUpdateableTasks(tasks)
+        updateableTasks = getUpdateableTasks()
                 
         # check to see if we have tasks to update
         if len(updateableTasks) > 0:
             # get the project's custom field settings
             customFieldSettings = client.custom_field_settings.find_by_project(projectId)
 
-            customFieldDict = getCustomFieldDict(customFieldSettings)    
+            customFieldDict = parseCustomFieldSettings()    
         
             # iterate over each task
             for task in updateableTasks:
@@ -160,14 +173,24 @@ if __name__ == "__main__":
                 notes = client.tasks.find_by_id(taskGid)['notes']
                 
                 # store results as dict
-                notesDict = getNotesAsDict(notes)
+                notesDict = parseNotes()
+                # for key in notesDict.keys():
+                #     print('{key}, {value}').format(key = key, value = notesDict[key])
 
                 # set up the data object to pass to the PUT/Update request
-                data = getCustomFieldData(notesDict, customFieldDict, customFieldSettings)
-                
+                apiData = { 'notes': notesDict['notes'],  'custom_fields': {} }
+                data = getCustomFieldData(apiData)
+                # for key in data.keys():
+                #     print('{key}, {value}').format(key = key, value = data[key])
+
                 # update the current task's field if the field name from Notes is present in the custom field settings
-                client.tasks.update(taskGid, data)
-                #print(data)
-                print('All tasks were updated!')
+                try:
+                    client.tasks.update(taskGid, data)
+                except:
+                    print('There was a problem updating the field via the API')
+                    for key in data.keys():
+                        print('{key}, {value}').format(key = key, value = data[key])
+
+                print('The task ({taskId}) was updated!').format(taskId = notesDict['TicketId'])
         else:
             print('There were no tasks to update!')
