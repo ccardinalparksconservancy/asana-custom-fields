@@ -1,7 +1,10 @@
 venv/
 .ipynb_checkpoints/
 .vscode/
+build/
+dist/
 
+*.spec
 *.ipynb
 asana-pat.txt
-
+asana-api-curl.txt
