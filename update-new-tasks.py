@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import asana
 import datetime
 import re
@@ -148,6 +150,7 @@ PyInstaller:
 
 if __name__ == '__main__':
     # personal access token from asana developers portal: https://app.asana.com/0/1101638289721813/board
+    # keep the PAT in an external file that is excluded from versioning (add to .gitignore)
     with open('asana-pat.txt', 'r') as f: 
         pat = f.readline()
 
@@ -160,14 +163,14 @@ if __name__ == '__main__':
     nrdbProjectId = 1107827681827126
     communicationsId = 1109168845883071
 
-    # make an array of project Ids to iterate
+    # make a list of project Ids to iterate
     projectIds = [
         ('PYC Apps Requests', pycProjectId), 
         ('AGOL Requests', agolProjectId), 
         ('NRDB App Requests', nrdbProjectId), 
         ('Communications Requests', communicationsId)]
 
-    # we're only concerned with tasks in the 'New Requests' board
+    # we're only concerned with tasks in the 'New Requests' board (for board layouts)
     sectionName = 'New Requests'
 
     # field names
@@ -187,7 +190,7 @@ if __name__ == '__main__':
     ticketIdField = 'TicketId'
 
     # keep track of current value of TicketId
-    currentTicket = ''
+    # currentTicket = ''
 
     # loop through each project
     for project in projectIds:
