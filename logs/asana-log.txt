@@ -23,3 +23,152 @@
 2019-02-12 12:22:01.645000	There were no tasks to update!
 2019-02-12 12:22:01.649000	Processing NRDB App Requests.
 2019-02-12 12:22:02.283000	There were no tasks to update!
+2019-02-19 17:05:04.436000	Processing PYC Apps Requests.
+2019-02-19 17:05:06.935000	There were no tasks to update!
+2019-02-19 17:05:06.937000	Processing AGOL Requests.
+2019-02-19 17:05:07.662000	There were no tasks to update!
+2019-02-19 17:05:07.663000	Processing NRDB App Requests.
+2019-02-19 17:05:09.305000	There were no tasks to update!
+2019-02-19 17:05:09.306000	Processing Communications Requests.
+2019-02-19 17:05:59.959000	Processing PYC Apps Requests.
+2019-02-19 17:06:01.694000	There were no tasks to update!
+2019-02-19 17:06:01.695000	Processing AGOL Requests.
+2019-02-19 17:06:02.388000	There were no tasks to update!
+2019-02-19 17:06:02.389000	Processing NRDB App Requests.
+2019-02-19 17:06:03.196000	There were no tasks to update!
+2019-02-19 17:06:03.196000	Processing Communications Requests.
+2019-02-20 16:43:06.083000	Processing PYC Apps Requests.
+2019-02-20 16:43:09.549000	There were no tasks to update!
+2019-02-20 16:43:09.552000	Processing AGOL Requests.
+2019-02-20 16:43:10.527000	There were no tasks to update!
+2019-02-20 16:43:10.530000	Processing NRDB App Requests.
+2019-02-20 16:43:11.638000	There were no tasks to update!
+2019-02-20 16:43:11.640000	Processing Communications Requests.
+2019-02-20 16:43:23.859000	There was a problem updating the fields in task via the API
+2019-02-20 16:43:23.860000	1103697081790087, 1103697081790088
+2019-02-20 16:43:23.860000	1109776046262956, Testing Dept 3
+2019-02-20 16:43:23.861000	1109776046262958, Jimmy McPerson
+2019-02-20 16:43:23.862000	1109784088625758, 1000
+2019-02-20 16:43:23.863000	1109949378218205, Big project
+High priority
+Real hard
+2019-02-20 16:43:23.864000	1109136161245453, 1109136161245454
+2019-02-20 16:43:23.865000	1109784088625752, yes
+2019-02-20 16:43:23.866000	1109784088625754, Magic Show, Design and/or Print Products, Website(s), Social Media, Editorial (Park E-ventures, Gateways, Other E-Newsletters, Editing), Paid Promotions (Digital Advertising, Paid Social Media Promotions)
+2019-02-20 16:43:23.867000	1101745520726922, Socko von Puppetface
+2019-02-20 16:43:23.868000	1109784088625756, Members, Non-Members/New Audiences, Volunteers
+2019-02-20 16:43:26.345000	There was a problem updating the fields in task via the API
+2019-02-20 16:43:26.347000	1103697081790087, 1103697081790088
+2019-02-20 16:43:28.266000	There was a problem updating the fields in task via the API
+2019-02-20 16:43:28.269000	1103697081790087, 1103697081790088
+2019-02-20 16:43:29.972000	There was a problem updating the fields in task via the API
+2019-02-20 16:43:29.973000	1103697081790087, 1103697081790088
+2019-02-20 16:43:32.073000	There was a problem updating the fields in task via the API
+2019-02-20 16:43:32.073000	1103697081790087, 1103697081790088
+2019-02-20 16:43:41.188000	There was a problem updating the fields in task via the API
+2019-02-20 16:43:41.190000	1103697081790087, 1103697081790088
+2019-02-20 16:43:43.087000	There was a problem updating the fields in task via the API
+2019-02-20 16:43:43.090000	1103697081790087, 1103697081790088
+2019-02-20 16:43:49.749000	Processing PYC Apps Requests.
+2019-02-20 16:43:52.793000	There were no tasks to update!
+2019-02-20 16:43:52.795000	Processing AGOL Requests.
+2019-02-20 16:43:53.597000	There were no tasks to update!
+2019-02-20 16:43:53.599000	Processing NRDB App Requests.
+2019-02-20 16:43:54.566000	There were no tasks to update!
+2019-02-20 16:43:54.570000	Processing Communications Requests.
+2019-02-20 16:44:01.855000	There was a problem updating the fields in task via the API
+2019-02-20 16:44:01.857000	1103697081790087, 1103697081790088
+2019-02-20 16:44:03.394000	There was a problem updating the fields in task via the API
+2019-02-20 16:44:03.397000	1103697081790087, 1103697081790088
+2019-02-20 16:44:05.004000	There was a problem updating the fields in task via the API
+2019-02-20 16:44:05.007000	1103697081790087, 1103697081790088
+2019-02-20 16:44:06.916000	There was a problem updating the fields in task via the API
+2019-02-20 16:44:06.918000	1103697081790087, 1103697081790088
+2019-02-20 16:44:09.851000	There was a problem updating the fields in task via the API
+2019-02-20 16:44:09.854000	1103697081790087, 1103697081790088
+2019-02-20 16:44:14.819000	There was a problem updating the fields in task via the API
+2019-02-20 16:44:14.821000	1103697081790087, 1103697081790088
+2019-02-20 16:55:12.990000	Processing PYC Apps Requests.
+2019-02-20 16:55:16.435000	There were no tasks to update!
+2019-02-20 16:55:16.438000	Processing AGOL Requests.
+2019-02-20 16:55:17.426000	There were no tasks to update!
+2019-02-20 16:55:17.428000	Processing NRDB App Requests.
+2019-02-20 16:55:19.132000	There were no tasks to update!
+2019-02-20 16:55:19.135000	Processing Communications Requests.
+2019-02-20 16:55:29.170000	There was a problem updating the fields in task via the API
+2019-02-20 16:55:29.173000	1103697081790087, 1103697081790088
+2019-02-20 16:55:29.175000	1109776046262956, Testing Dept 3
+2019-02-20 16:55:29.177000	1109776046262958, Jimmy McPerson
+2019-02-20 16:55:29.180000	1109784088625758, 1000
+2019-02-20 16:55:29.182000	1109949378218205, Big project
+High priority
+Real hard
+2019-02-20 16:55:29.186000	1109136161245453, 1109136161245454
+2019-02-20 16:55:29.189000	1109784088625752, yes
+2019-02-20 16:55:29.194000	1109776046262960, yes, Nighthowl
+2019-02-20 16:55:29.201000	1109784088625754, Magic Show, Design and/or Print Products, Website(s), Social Media, Editorial (Park E-ventures, Gateways, Other E-Newsletters, Editing), Paid Promotions (Digital Advertising, Paid Social Media Promotions)
+2019-02-20 16:55:29.206000	1101745520726922, Socko von Puppetface
+2019-02-20 16:55:29.209000	1109784088625756, Members, Non-Members/New Audiences, Volunteers
+2019-02-20 17:00:35.200000	Processing PYC Apps Requests.
+2019-02-20 17:00:38.307000	There were no tasks to update!
+2019-02-20 17:00:38.309000	Processing AGOL Requests.
+2019-02-20 17:00:39.393000	There were no tasks to update!
+2019-02-20 17:00:39.397000	Processing NRDB App Requests.
+2019-02-20 17:00:41.022000	There were no tasks to update!
+2019-02-20 17:00:41.024000	Processing Communications Requests.
+2019-02-20 17:00:54.579000	There was a problem updating the fields in task via the API
+2019-02-20 17:00:54.585000	1103697081790087, 1103697081790088
+2019-02-20 17:00:54.588000	1109776046262956, Testing Dept 3
+2019-02-20 17:00:54.591000	1109776046262958, Jimmy McPerson
+2019-02-20 17:00:54.593000	1109784088625758, 1000
+2019-02-20 17:00:54.597000	1109949378218205, Big project
+High priority
+Real hard
+2019-02-20 17:00:54.600000	1109136161245453, 1109136161245454
+2019-02-20 17:00:54.602000	1109784088625752, yes
+2019-02-20 17:00:54.606000	1109776046262960, yes, Nighthowl
+2019-02-20 17:00:54.613000	1109784088625754, Magic Show, Design and/or Print Products, Website(s), Social Media, Editorial (Park E-ventures, Gateways, Other E-Newsletters, Editing), Paid Promotions (Digital Advertising, Paid Social Media Promotions)
+2019-02-20 17:00:54.616000	1101745520726922, Socko von Puppetface
+2019-02-20 17:00:54.619000	1109784088625756, Members, Non-Members/New Audiences, Volunteers
+2019-02-20 17:04:15.668000	Processing PYC Apps Requests.
+2019-02-20 17:04:18.164000	There were no tasks to update!
+2019-02-20 17:04:18.166000	Processing AGOL Requests.
+2019-02-20 17:04:19.467000	There were no tasks to update!
+2019-02-20 17:04:19.469000	Processing NRDB App Requests.
+2019-02-20 17:04:20.583000	There were no tasks to update!
+2019-02-20 17:04:20.585000	Processing Communications Requests.
+2019-02-20 17:04:36.417000	The task was updated!
+2019-02-20 17:26:22.996000	Processing PYC Apps Requests.
+2019-02-20 17:26:28.377000	There were no tasks to update!
+2019-02-20 17:26:28.379000	Processing AGOL Requests.
+2019-02-20 17:26:29.450000	There were no tasks to update!
+2019-02-20 17:26:29.453000	Processing NRDB App Requests.
+2019-02-20 17:26:31.052000	There were no tasks to update!
+2019-02-20 17:26:31.055000	Processing Communications Requests.
+2019-02-20 17:26:37.212000	There were no tasks to update!
+2019-02-20 17:26:57.195000	Processing PYC Apps Requests.
+2019-02-20 17:27:00.177000	There were no tasks to update!
+2019-02-20 17:27:00.180000	Processing AGOL Requests.
+2019-02-20 17:27:01.268000	There were no tasks to update!
+2019-02-20 17:27:01.270000	Processing NRDB App Requests.
+2019-02-20 17:27:02.288000	There were no tasks to update!
+2019-02-20 17:27:02.290000	Processing Communications Requests.
+2019-02-20 17:27:09.981000	The task was updated!
+2019-02-20 17:28:27.652000	Processing PYC Apps Requests.
+2019-02-20 17:28:30.964000	There were no tasks to update!
+2019-02-20 17:28:30.967000	Processing AGOL Requests.
+2019-02-20 17:28:31.793000	There were no tasks to update!
+2019-02-20 17:28:31.795000	Processing NRDB App Requests.
+2019-02-20 17:28:32.968000	There were no tasks to update!
+2019-02-20 17:28:32.970000	Processing Communications Requests.
+2019-02-20 17:28:42.214000	The task was updated!
+2019-02-21 09:54:29.914000	Processing PYC Apps Requests.
+2019-02-21 09:54:32.483000	There were no tasks to update!
+2019-02-21 09:54:32.485000	Processing AGOL Requests.
+2019-02-21 09:54:34.136000	There were no tasks to update!
+2019-02-21 09:54:34.138000	Processing NRDB App Requests.
+2019-02-21 09:54:35.771000	There were no tasks to update!
+2019-02-21 09:54:35.773000	Processing Communications Requests.
+2019-02-21 09:54:48.452000	The task was updated!
+2019-02-21 09:54:53.277000	The task was updated!
+2019-02-21 09:54:57.693000	The task was updated!

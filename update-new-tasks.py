@@ -13,22 +13,34 @@ def getSectionGid():
     raise Exception ('Did not find appropriate Section!')
 
 def getUpdateableTasks():
-    tmpList = []
+    # a list to store all tasks that need to be updated
+    taskList = []
+
+    # iterate through each task ('tasks' contains limited info on each task)
     for task in tasks:
+        # get the task Id
         taskGid = task[gidField]
+
+        # get full information about the task
         t = client.tasks.find_by_id(taskGid)
-        #isUpdateable = [field for field in t['custom_fields'] if field['resource_subtype'] == 'enum' and field['name'] == apiUpdatedField and field['enum_value'] is None]
-        isUpdateable = list(filter(lambda x: 
-            x[resourceSubtypeField] == 'enum' and 
-            x[nameField] == apiUpdatedField and 
-            x[enumValueField] is None,  t[customFields]))
+        
+        # search the cutom fields of the task for the api_updated field
+        # if found and value is None then add to list
+        isUpdateable = list(filter(
+            lambda x: 
+                x[resourceSubtypeField] == 'enum' and 
+                x[nameField] == apiUpdatedField and 
+                x[enumValueField] is None,  t[customFields]))
+        
+        # if isUpdateable contains at least one element, then task needs to be updated
         if len(isUpdateable) > 0:
-            tmpList.append(t)
-    return tmpList
+            taskList.append(t)
+    
+    return taskList
 
 def parseCustomFieldSettings():
     # use a temporary dict to store custom field information
-    tmpDict = {}
+    cfDict = {}
 
     # loop through each custom field setting
     for cf in customFieldSettings:
@@ -40,20 +52,20 @@ def parseCustomFieldSettings():
         gid = cf[customField][gidField]
 
         # the top-level keys are the custom field names
-        tmpDict[name] = {}
+        cfDict[name] = {}
 
         # if the custom field is an enum, track both custom field Id and custom field value Id
         if enumOptionsField in cf[customField].keys():
             for enum in cf[customField][enumOptionsField]:
                 val = enum[nameField]
                 enumId = enum[gidField]
-                tmpDict[name][val] = { customIdField: gid, customValueIdField: enumId }
-                tmpDict[name][typeField] = resourceSubtype
+                cfDict[name][val] = { customIdField: gid, customValueIdField: enumId }
+                cfDict[name][typeField] = resourceSubtype
         # if custom field is text or number, just track the custom field Id
         else:
-            tmpDict[name] = { typeField: resourceSubtype, customIdField: gid }
+            cfDict[name] = { typeField: resourceSubtype, customIdField: gid }
     
-    return tmpDict
+    return cfDict
 
 def parseNotes():
     # create a list of strings of the key/value pairs
@@ -63,7 +75,7 @@ def parseNotes():
 
     # iterate over each string
     for line in notesList:
-        # split on colon to separate field/value
+        # split on vertical bar to separate field/value
         tmpList = line.split('|')
 
         # if we've parsed a field/value, add it to the dict: key=field name, value=field value
@@ -83,15 +95,13 @@ def padTicketId(fieldValue):
     else:
         projectValue = splitValues[0]
         idValue = splitValues[1].zfill(6)
-        # if len(idValue) < 5:
-        #     idValue = '0' * (5 - len(idValue)) + idValue
-        # else:
-        #     raise Exception('There is something wrong with the numerical part of the TicketId value: {idValue}'.format(idValue = idValue))
 
     newFieldValue = projectValue + '-' + idValue
     return newFieldValue
 
-def getCustomFieldData(data):
+def getCustomFieldData():
+    # initialize dict to hold custom field data
+    data = {}
     # iterate over each field extracted from the Notes
     for fieldName in notesDict.keys():
         # ensure that the field name from Notes is valid
@@ -109,11 +119,11 @@ def getCustomFieldData(data):
                 cidf = currentSettings[customIdField]
                 cidv = notesDict[fieldName]
 
-            data[customFields][cidf] = cidv
+            data[cidf] = cidv
             #print('cid %s, cidv %s' % (customFieldIdField, customFieldValueId))
     
     # add the custom field info for the api_updated field
-    data[customFields][apiCustomFieldId] = apiCustomFieldValueId
+    data[apiCustomFieldId] = apiCustomFieldValueId
     
     # add a due date -- this is done in Forms now
     # due_on = datetime.now().date() + timedelta(days=7)
@@ -128,6 +138,7 @@ def log(text):
     with open(logFile, 'a+') as log:
         logText = '{ts}\t{t}\n'.format(ts = timestamp, t = text)
         log.write(logText)
+
 '''
 PyInstaller:
     - find warnings: C:\Users\ccardinal\source\repos\python\asana-custom-fields\build\update-new-tasks\warn-update-new-tasks.txt
@@ -147,9 +158,14 @@ if __name__ == '__main__':
     pycProjectId = 1101667914088903
     agolProjectId = 1101638289721813
     nrdbProjectId = 1107827681827126
+    communicationsId = 1109168845883071
 
     # make an array of project Ids to iterate
-    projectIds = [('PYC Apps Requests', pycProjectId), ('AGOL Requests', agolProjectId), ('NRDB App Requests', nrdbProjectId)]
+    projectIds = [
+        ('PYC Apps Requests', pycProjectId), 
+        ('AGOL Requests', agolProjectId), 
+        ('NRDB App Requests', nrdbProjectId), 
+        ('Communications Requests', communicationsId)]
 
     # we're only concerned with tasks in the 'New Requests' board
     sectionName = 'New Requests'
@@ -181,12 +197,27 @@ if __name__ == '__main__':
 
         print('Processing {proj}.'.format(proj = projectName))
         log('Processing {proj}.'.format(proj = projectName))
-        ## check to see if there are tasks that need updating
-        # first get the section global Id (using global projectId)
-        sectionGid = getSectionGid()
 
-        # now find all tasks in the section
-        tasks = client.tasks.find_by_section(sectionGid)
+        ## check to see if there are tasks that need updating
+        # first check if project is a list or a board
+        # get the current project by Id
+        currentProject = client.projects.find_by_id(projectId)
+
+        # get the current project's layout, e.g. 'board' or 'list'
+        layout = currentProject['layout']
+
+        # if board layout...
+        if (layout == 'board'):
+            # get the section global Id (using global projectId)
+            sectionGid = getSectionGid()
+
+            # now find all tasks in the section
+            # returns minimal information about tasks
+            tasks = client.tasks.find_by_section(sectionGid)
+
+        else: # otherwise access all tasks in the list
+            # returns minimal information about tasks
+            tasks = client.tasks.find_by_project(projectId)
         
         # extract tasks that have not been updated by this script and store results in array
         updateableTasks = getUpdateableTasks()
@@ -217,29 +248,39 @@ if __name__ == '__main__':
 
                 # check that notesDict has at least one key (prevents errors when tasks are made via the Asana interface)
                 if len(notesDict.keys()) > 0:
+                    # get the custom field data
+                    customFieldData = getCustomFieldData()
+
                     # set up the data object to pass to the PUT/Update request
-                    apiData = { notesField: notesDict[notesField],  customFields: {} }
-                    data = getCustomFieldData(apiData)
+                    apiData = { notesField: notesDict[notesField],  customFields: customFieldData }
+
                     # for key in data.keys():
                     #     print('{key}, {value}').format(key = key, value = data[key])
                 else:
-                    apiData = { customFields: {} }
-                    data = getCustomFieldData(apiData)
+                    # get the custom field data
+                    customFieldData = getCustomFieldData()
+                    
+                    # set up the data object to pass to the PUT/Update request
+                    apiData = { customFields: customFieldData }
                 
                 # update the current task's fields with data from the Notes area
                 try:
-                    client.tasks.update(taskGid, data)
-                
-                    print('The task ({ticketId}) was updated!').format(ticketId = notesDict[ticketIdField])
-                    log('The task ({ticketId}) was updated!'.format(ticketId = notesDict[ticketIdField]))
-                    # print('The task was updated!')
+                    client.tasks.update(taskGid, apiData)
 
-                except:
+                    if 'ticketId' in notesDict.keys():
+                        print('The task ({ticketId}) was updated!').format(ticketId = notesDict[ticketIdField])
+                        log('The task ({ticketId}) was updated!'.format(ticketId = notesDict[ticketIdField]))
+                    else:
+                        print('The task was updated!')
+                        log('The task was updated!')
+
+                except Exception as e:
+                    print(e)
                     print('There was a problem updating the fields in task via the API')
                     log('There was a problem updating the fields in task via the API')
-                    for key in data[customFields].keys():
-                        print('{key}, {value}').format(key = key, value = data[customFields][key])
-                        log('{key}, {value}'.format(key = key, value = data[customFields][key]))
+                    for key in apiData[customFields].keys():
+                        print('{key}, {value}').format(key = key, value = apiData[customFields][key])
+                        log('{key}, {value}'.format(key = key, value = apiData[customFields][key]))
         else:
             print('There were no tasks to update!')
             log('There were no tasks to update!')
