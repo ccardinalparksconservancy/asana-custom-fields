@@ -70,8 +70,11 @@ def parseCustomFieldSettings():
     return cfDict
 
 def parseNotes():
+    # first deal with ||| if any - caused by fields in Forms with no values
+    # by adding a space between first and second |
+    newNotes = notes.replace('|||', '| ||')
     # create a list of strings of the key/value pairs
-    notesList = notes.split('||')
+    notesList = newNotes.split('||')
     # temporary dict to be returned
     tmpDict = {}
 
@@ -202,8 +205,7 @@ if __name__ == '__main__':
         log('Processing {proj}.'.format(proj = projectName))
 
         ## check to see if there are tasks that need updating
-        # first check if project is a list or a board
-        # get the current project by Id
+        # first get the current project by Id
         currentProject = client.projects.find_by_id(projectId)
 
         # get the current project's layout, e.g. 'board' or 'list'
