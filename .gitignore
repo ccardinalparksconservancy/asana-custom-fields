@@ -3,9 +3,10 @@ venv/
 .vscode/
 build/
 logs/
-*.py[cod]     # Will match .pyc, .pyo and .pyd files.
 __pycache__/  # Exclude the whole folder
 
+*.py[cod]     # Will match .pyc, .pyo and .pyd files.
+*.pyc
 *.spec
 *.ipynb
 asana-pat.txt

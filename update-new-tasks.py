@@ -1,8 +1,105 @@
 import asana
 import datetime
 import re
+import threading
 
-def getSectionGid():
+def processTasks(projectName, projectId, taskGID=None):
+    # start logging 
+    print('Processing {proj}.'.format(proj = projectName))
+    log('Processing {proj}.'.format(proj = projectName))
+
+    ## check to see if there are tasks that need updating
+    # first get the current project by Id
+    currentProject = client.projects.find_by_id(projectId)
+
+    # get the current project's layout, e.g. 'board' or 'list'
+    layout = currentProject['layout']
+
+    # first check if taskGID is set
+    if taskGID is not None:
+        tasks = [client.tasks.find_by_id(taskGID)]
+    # if board layout...
+    elif (layout == 'board'):
+        # get the section global Id (using global projectId)
+        sectionGid = getSectionGid(projectId)
+
+        # now find all tasks in the section
+        # returns minimal information about tasks
+        tasks = client.tasks.find_by_section(sectionGid)
+
+    else: # otherwise access all tasks in the list
+        # returns minimal information about tasks
+        tasks = client.tasks.find_by_project(projectId)
+    
+    # extract tasks that have not been updated by this script and store results in array
+    updateableTasks = getUpdateableTasks(tasks)
+            
+    # if we have tasks to update
+    if len(updateableTasks) > 0:
+        # get the project's custom field settings
+        customFieldSettings = client.custom_field_settings.find_by_project(projectId)
+        # create a dict based on custom field Id's and value Id's
+        customFieldDict = parseCustomFieldSettings(customFieldSettings)    
+    
+        # iterate over each task
+        for task in updateableTasks:
+            # get the task global Id
+            taskGid = task[gidField]
+            
+            # get the custom field Id and value for the 'api_updated' custom field
+            apiCustomFieldId = customFieldDict[apiUpdatedField]['yes'][customIdField]
+            apiCustomFieldValueId = customFieldDict[apiUpdatedField]['yes'][customValueIdField]
+            
+            # get the Notes associated with the task - the data we need is stored here
+            notes = client.tasks.find_by_id(taskGid)[notesField]
+            
+            # store results as dict
+            notesDict = parseNotes(notes)
+            # for key in notesDict.keys():
+            #     print('{key}, {value}').format(key = key, value = notesDict[key])
+
+            # check that notesDict has at least one key (prevents errors when tasks are made via the Asana interface)
+            if len(notesDict.keys()) > 0:
+                # get the custom field data
+                customFieldData = getCustomFieldData(notesDict, customFieldDict)
+                customFieldData[apiCustomFieldId] = apiCustomFieldValueId
+
+                # set up the data object to pass to the PUT/Update request
+                apiData = { notesField: notesDict[notesField],  customFields: customFieldData }
+
+                # for key in data.keys():
+                #     print('{key}, {value}').format(key = key, value = data[key])
+            else:
+                # get the custom field data
+                customFieldData = getCustomFieldData(notesDict, customFieldDict)
+                customFieldData[apiCustomFieldId] = apiCustomFieldValueId
+                
+                # set up the data object to pass to the PUT/Update request
+                apiData = { customFields: customFieldData }
+            
+            # update the current task's fields with data from the Notes area
+            try:
+                client.tasks.update(taskGid, apiData)
+
+                if 'ticketId' in notesDict.keys():
+                    print('The task ({ticketId}) was updated!').format(ticketId = notesDict[ticketIdField])
+                    log('The task ({ticketId}) was updated!'.format(ticketId = notesDict[ticketIdField]))
+                else:
+                    print('The task was updated!')
+                    log('The task was updated!')
+
+            except Exception as e:
+                print(e)
+                print('There was a problem updating the fields in task via the API')
+                log('There was a problem updating the fields in task via the API')
+                for key in apiData[customFields].keys():
+                    print('{key}, {value}').format(key = key, value = apiData[customFields][key])
+                    log('{key}, {value}'.format(key = key, value = apiData[customFields][key]))
+    else:
+        print('There were no tasks to update!')
+        log('There were no tasks to update!')
+
+def getSectionGid(projectId):
     # get all sections associated with the project
     sections = client.sections.find_by_project(projectId)
     # get only the section we care about -- 'New Requests'
@@ -12,7 +109,7 @@ def getSectionGid():
         return section[gidField]
     raise Exception ('Did not find appropriate Section!')
 
-def getUpdateableTasks():
+def getUpdateableTasks(tasks):
     # a list to store all tasks that need to be updated
     taskList = []
 
@@ -38,7 +135,7 @@ def getUpdateableTasks():
     
     return taskList
 
-def parseCustomFieldSettings():
+def parseCustomFieldSettings(customFieldSettings):
     # use a temporary dict to store custom field information
     cfDict = {}
 
@@ -67,7 +164,7 @@ def parseCustomFieldSettings():
     
     return cfDict
 
-def parseNotes():
+def parseNotes(notes):
     # first deal with ||| if any - caused by fields in Forms with no values
     # by adding a space between first and second |
     newNotes = notes.replace('|||', '| ||')
@@ -102,7 +199,7 @@ def padTicketId(fieldValue):
     newFieldValue = projectValue + '-' + idValue
     return newFieldValue
 
-def getCustomFieldData():
+def getCustomFieldData(notesDict, customFieldDict):
     # initialize dict to hold custom field data
     data = {}
     # iterate over each field extracted from the Notes
@@ -126,7 +223,7 @@ def getCustomFieldData():
             #print('cid %s, cidv %s' % (customFieldIdField, customFieldValueId))
     
     # add the custom field info for the api_updated field
-    data[apiCustomFieldId] = apiCustomFieldValueId
+    # data[apiCustomFieldId] = apiCustomFieldValueId
     
     # add a due date -- this is done in Forms now
     # due_on = datetime.now().date() + timedelta(days=7)
@@ -141,6 +238,46 @@ def log(text):
     with open(logFile, 'a+') as log:
         logText = '{ts}\t{t}\n'.format(ts = timestamp, t = text)
         log.write(logText)
+
+def getEvents(projectName, projectId, sync):
+    print('Starting {proj} thread!'.format(proj=projectName))
+
+    if sync is None:
+        result = client.events.get_next({ 'resource': projectId })
+    else:
+        result = client.events.get_next({ 'resource': projectId, 'sync': sync })
+    events = result[0]
+
+    # get the current project by Id
+    currentProject = client.projects.find_by_id(projectId)
+    # get the current project's layout, e.g. 'board' or 'list'
+    layout = currentProject['layout']
+
+    # if board layout, filter for parent == section to reduce duplicates
+    if (layout == 'board'):
+        addedTaskEvents = [
+            event for event in events if event['action'] == 'added' 
+            and event['resource']['resource_type'] == 'task' 
+            and event['parent']['resource_type'] == 'section' 
+            and event['parent']['name'] == sectionName
+        ]
+    # otherwise list layout - cannot filter by sections
+    else:
+        addedTaskEvents = [
+            event for event in events if event['action'] == 'added' 
+            and event['resource']['resource_type'] == 'task' 
+        ]
+
+    if len(addedTaskEvents) > 0:
+        taskGIDs = [event['resource']['gid'] for event in addedTaskEvents]
+        print(taskGIDs)
+        print(addedTaskEvents)
+        for tGID in taskGIDs:
+            processTasks(projectName, projectId, tGID)
+
+    sync = result[1]
+    eventThread = threading.Thread(target=getEvents, args=(projectName, projectId, sync))
+    eventThread.start()
 
 '''
 PyInstaller:
@@ -169,7 +306,8 @@ if __name__ == '__main__':
         ('PYC Apps Requests', pycProjectId), 
         ('AGOL Requests', agolProjectId), 
         ('NRDB App Requests', nrdbProjectId), 
-        ('Communications Requests', communicationsId)]
+        ('Communications Requests', communicationsId)
+    ]
 
     # we're only concerned with tasks in the 'New Requests' board (for board layouts)
     sectionName = 'New Requests'
@@ -190,100 +328,14 @@ if __name__ == '__main__':
     customValueIdField = 'customFieldValueId'
     ticketIdField = 'TicketId'
 
-    # keep track of current value of TicketId
-    # currentTicket = ''
-
     # loop through each project
     for project in projectIds:
         # get the project name and Id
         projectName = project[0]
         projectId = project[1]
 
-        print('Processing {proj}.'.format(proj = projectName))
-        log('Processing {proj}.'.format(proj = projectName))
-
-        ## check to see if there are tasks that need updating
-        # first get the current project by Id
-        currentProject = client.projects.find_by_id(projectId)
-
-        # get the current project's layout, e.g. 'board' or 'list'
-        layout = currentProject['layout']
-
-        # if board layout...
-        if (layout == 'board'):
-            # get the section global Id (using global projectId)
-            sectionGid = getSectionGid()
-
-            # now find all tasks in the section
-            # returns minimal information about tasks
-            tasks = client.tasks.find_by_section(sectionGid)
-
-        else: # otherwise access all tasks in the list
-            # returns minimal information about tasks
-            tasks = client.tasks.find_by_project(projectId)
+        # call main function
+        #processTasks(projectName, projectId)
         
-        # extract tasks that have not been updated by this script and store results in array
-        updateableTasks = getUpdateableTasks()
-                
-        # if we have tasks to update
-        if len(updateableTasks) > 0:
-            # get the project's custom field settings
-            customFieldSettings = client.custom_field_settings.find_by_project(projectId)
-            # create a dict based on custom field Id's and value Id's
-            customFieldDict = parseCustomFieldSettings()    
-        
-            # iterate over each task
-            for task in updateableTasks:
-                # get the task global Id
-                taskGid = task[gidField]
-                
-                # get the custom field Id and value for the 'api_updated' custom field
-                apiCustomFieldId = customFieldDict[apiUpdatedField]['yes'][customIdField]
-                apiCustomFieldValueId = customFieldDict[apiUpdatedField]['yes'][customValueIdField]
-                
-                # get the Notes associated with the task - the data we need is stored here
-                notes = client.tasks.find_by_id(taskGid)[notesField]
-                
-                # store results as dict
-                notesDict = parseNotes()
-                # for key in notesDict.keys():
-                #     print('{key}, {value}').format(key = key, value = notesDict[key])
-
-                # check that notesDict has at least one key (prevents errors when tasks are made via the Asana interface)
-                if len(notesDict.keys()) > 0:
-                    # get the custom field data
-                    customFieldData = getCustomFieldData()
-
-                    # set up the data object to pass to the PUT/Update request
-                    apiData = { notesField: notesDict[notesField],  customFields: customFieldData }
-
-                    # for key in data.keys():
-                    #     print('{key}, {value}').format(key = key, value = data[key])
-                else:
-                    # get the custom field data
-                    customFieldData = getCustomFieldData()
-                    
-                    # set up the data object to pass to the PUT/Update request
-                    apiData = { customFields: customFieldData }
-                
-                # update the current task's fields with data from the Notes area
-                try:
-                    client.tasks.update(taskGid, apiData)
-
-                    if 'ticketId' in notesDict.keys():
-                        print('The task ({ticketId}) was updated!').format(ticketId = notesDict[ticketIdField])
-                        log('The task ({ticketId}) was updated!'.format(ticketId = notesDict[ticketIdField]))
-                    else:
-                        print('The task was updated!')
-                        log('The task was updated!')
-
-                except Exception as e:
-                    print(e)
-                    print('There was a problem updating the fields in task via the API')
-                    log('There was a problem updating the fields in task via the API')
-                    for key in apiData[customFields].keys():
-                        print('{key}, {value}').format(key = key, value = apiData[customFields][key])
-                        log('{key}, {value}'.format(key = key, value = apiData[customFields][key]))
-        else:
-            print('There were no tasks to update!')
-            log('There were no tasks to update!')
+        eventThread = threading.Thread(target=getEvents, args=(projectName, projectId, None,))
+        eventThread.start()

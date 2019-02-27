@@ -2473,3 +2473,235 @@ Real hard
 2019-02-26 10:30:06.276000	There were no tasks to update!
 2019-02-26 10:30:06.286000	Processing Communications Requests.
 2019-02-26 10:30:15.734000	There were no tasks to update!
+2019-02-26 10:40:00.918000	Processing PYC Apps Requests.
+2019-02-26 10:40:03.442000	There were no tasks to update!
+2019-02-26 10:40:03.452000	Processing AGOL Requests.
+2019-02-26 10:40:04.705000	There were no tasks to update!
+2019-02-26 10:40:04.718000	Processing NRDB App Requests.
+2019-02-26 10:40:06.161000	There were no tasks to update!
+2019-02-26 10:40:06.171000	Processing Communications Requests.
+2019-02-26 10:40:13.806000	There were no tasks to update!
+2019-02-26 10:45:15.903000	Processing PYC Apps Requests.
+2019-02-26 10:50:01.020000	Processing PYC Apps Requests.
+2019-02-26 10:50:03.767000	There were no tasks to update!
+2019-02-26 10:50:03.777000	Processing AGOL Requests.
+2019-02-26 10:50:05.226000	There were no tasks to update!
+2019-02-26 10:50:05.236000	Processing NRDB App Requests.
+2019-02-26 10:50:06.478000	There were no tasks to update!
+2019-02-26 10:50:06.489000	Processing Communications Requests.
+2019-02-26 10:50:15.188000	There were no tasks to update!
+2019-02-26 10:52:22.864000	Processing PYC Apps Requests.
+2019-02-26 10:52:25.137000	There were no tasks to update!
+2019-02-26 10:52:25.140000	Processing AGOL Requests.
+2019-02-26 10:52:26.237000	There were no tasks to update!
+2019-02-26 10:52:26.238000	Processing NRDB App Requests.
+2019-02-26 10:52:27.258000	There were no tasks to update!
+2019-02-26 10:52:27.259000	Processing Communications Requests.
+2019-02-26 10:52:34.796000	There were no tasks to update!
+2019-02-26 11:00:01.288000	Processing PYC Apps Requests.
+2019-02-26 11:00:04.338000	There were no tasks to update!
+2019-02-26 11:00:04.342000	Processing AGOL Requests.
+2019-02-26 11:00:05.746000	There were no tasks to update!
+2019-02-26 11:00:05.750000	Processing NRDB App Requests.
+2019-02-26 11:00:06.093000	Processing PYC Apps Requests.
+2019-02-26 11:00:06.519000	There were no tasks to update!
+2019-02-26 11:00:06.522000	Processing Communications Requests.
+2019-02-26 11:00:08.412000	There were no tasks to update!
+2019-02-26 11:00:15.889000	There were no tasks to update!
+2019-02-26 11:10:00.932000	Processing PYC Apps Requests.
+2019-02-26 11:10:07.965000	The task was updated!
+2019-02-26 11:10:09.684000	The task was updated!
+2019-02-26 11:10:11.717000	The task was updated!
+2019-02-26 11:10:11.721000	Processing AGOL Requests.
+2019-02-26 11:10:12.916000	There were no tasks to update!
+2019-02-26 11:10:12.926000	Processing NRDB App Requests.
+2019-02-26 11:10:14.040000	There were no tasks to update!
+2019-02-26 11:10:14.043000	Processing Communications Requests.
+2019-02-26 11:10:21.539000	There were no tasks to update!
+2019-02-26 11:20:01.010000	Processing PYC Apps Requests.
+2019-02-26 11:20:04.812000	There were no tasks to update!
+2019-02-26 11:20:04.822000	Processing AGOL Requests.
+2019-02-26 11:20:05.944000	There were no tasks to update!
+2019-02-26 11:20:05.954000	Processing NRDB App Requests.
+2019-02-26 11:20:06.828000	There were no tasks to update!
+2019-02-26 11:20:06.834000	Processing Communications Requests.
+2019-02-26 11:20:14.572000	There were no tasks to update!
+2019-02-26 11:30:00.915000	Processing PYC Apps Requests.
+2019-02-26 11:30:05.388000	There were no tasks to update!
+2019-02-26 11:30:05.398000	Processing AGOL Requests.
+2019-02-26 11:30:06.595000	There were no tasks to update!
+2019-02-26 11:30:06.599000	Processing NRDB App Requests.
+2019-02-26 11:30:07.910000	There were no tasks to update!
+2019-02-26 11:30:07.913000	Processing Communications Requests.
+2019-02-26 11:30:18.465000	There were no tasks to update!
+2019-02-26 11:40:00.965000	Processing PYC Apps Requests.
+2019-02-26 11:40:10.199000	The task was updated!
+2019-02-26 11:40:10.205000	Processing AGOL Requests.
+2019-02-26 11:40:12.212000	There were no tasks to update!
+2019-02-26 11:40:12.221000	Processing NRDB App Requests.
+2019-02-26 11:40:13.385000	There were no tasks to update!
+2019-02-26 11:40:13.395000	Processing Communications Requests.
+2019-02-26 11:40:22.312000	There were no tasks to update!
+2019-02-26 11:50:01.054000	Processing PYC Apps Requests.
+2019-02-26 11:50:05.844000	There were no tasks to update!
+2019-02-26 11:50:05.853000	Processing AGOL Requests.
+2019-02-26 11:50:06.985000	There were no tasks to update!
+2019-02-26 11:50:06.995000	Processing NRDB App Requests.
+2019-02-26 11:50:08.043000	There were no tasks to update!
+2019-02-26 11:50:08.053000	Processing Communications Requests.
+2019-02-26 11:50:16.382000	There were no tasks to update!
+2019-02-26 12:00:00.937000	Processing PYC Apps Requests.
+2019-02-26 12:00:05.435000	There were no tasks to update!
+2019-02-26 12:00:05.452000	Processing AGOL Requests.
+2019-02-26 12:00:06.787000	There were no tasks to update!
+2019-02-26 12:00:06.798000	Processing NRDB App Requests.
+2019-02-26 12:00:08.014000	There were no tasks to update!
+2019-02-26 12:00:08.023000	Processing Communications Requests.
+2019-02-26 12:00:16.408000	There were no tasks to update!
+2019-02-26 12:10:34.253000	Processing PYC Apps Requests.
+2019-02-26 12:10:43.844000	There were no tasks to update!
+2019-02-26 12:10:43.850000	Processing AGOL Requests.
+2019-02-26 12:10:45.002000	There were no tasks to update!
+2019-02-26 12:10:45.007000	Processing NRDB App Requests.
+2019-02-26 12:10:46.002000	There were no tasks to update!
+2019-02-26 12:10:46.008000	Processing Communications Requests.
+2019-02-26 12:10:53.275000	There were no tasks to update!
+2019-02-26 12:20:07.225000	Processing PYC Apps Requests.
+2019-02-26 12:20:12.092000	There were no tasks to update!
+2019-02-26 12:20:12.097000	Processing AGOL Requests.
+2019-02-26 12:20:13.178000	There were no tasks to update!
+2019-02-26 12:20:13.184000	Processing NRDB App Requests.
+2019-02-26 12:20:14.368000	There were no tasks to update!
+2019-02-26 12:20:14.375000	Processing Communications Requests.
+2019-02-26 12:20:25.273000	There were no tasks to update!
+2019-02-26 12:30:00.965000	Processing PYC Apps Requests.
+2019-02-26 12:30:07.183000	There were no tasks to update!
+2019-02-26 12:30:07.187000	Processing AGOL Requests.
+2019-02-26 12:30:08.296000	There were no tasks to update!
+2019-02-26 12:30:08.306000	Processing NRDB App Requests.
+2019-02-26 12:30:09.637000	There were no tasks to update!
+2019-02-26 12:30:09.648000	Processing Communications Requests.
+2019-02-26 12:30:18.289000	There were no tasks to update!
+2019-02-26 12:30:48.213000	Processing PYC Apps Requests.
+2019-02-26 12:30:51.434000	There were no tasks to update!
+2019-02-26 12:30:51.452000	Processing AGOL Requests.
+2019-02-26 12:30:52.786000	There were no tasks to update!
+2019-02-26 12:30:52.810000	Processing NRDB App Requests.
+2019-02-26 12:30:53.763000	There were no tasks to update!
+2019-02-26 12:30:53.787000	Processing Communications Requests.
+2019-02-26 12:31:01.572000	There were no tasks to update!
+2019-02-26 12:40:01.198000	Processing PYC Apps Requests.
+2019-02-26 12:40:05.006000	There were no tasks to update!
+2019-02-26 12:40:05.015000	Processing AGOL Requests.
+2019-02-26 12:40:06.374000	There were no tasks to update!
+2019-02-26 12:40:06.377000	Processing NRDB App Requests.
+2019-02-26 12:40:07.417000	There were no tasks to update!
+2019-02-26 12:40:07.427000	Processing Communications Requests.
+2019-02-26 12:40:14.334000	There were no tasks to update!
+2019-02-26 12:50:01.198000	Processing PYC Apps Requests.
+2019-02-26 12:50:06.311000	There were no tasks to update!
+2019-02-26 12:50:06.315000	Processing AGOL Requests.
+2019-02-26 12:50:07.406000	There were no tasks to update!
+2019-02-26 12:50:07.410000	Processing NRDB App Requests.
+2019-02-26 12:50:09.641000	There were no tasks to update!
+2019-02-26 12:50:09.644000	Processing Communications Requests.
+2019-02-26 12:50:17.522000	There were no tasks to update!
+2019-02-26 13:00:01.522000	Processing PYC Apps Requests.
+2019-02-26 13:00:07.205000	There were no tasks to update!
+2019-02-26 13:00:07.209000	Processing AGOL Requests.
+2019-02-26 13:00:08.500000	There were no tasks to update!
+2019-02-26 13:00:08.505000	Processing NRDB App Requests.
+2019-02-26 13:00:09.724000	There were no tasks to update!
+2019-02-26 13:00:09.728000	Processing Communications Requests.
+2019-02-26 13:00:17.436000	There were no tasks to update!
+2019-02-26 13:10:01.305000	Processing PYC Apps Requests.
+2019-02-26 13:10:07.140000	There were no tasks to update!
+2019-02-26 13:10:07.143000	Processing AGOL Requests.
+2019-02-26 13:10:08.746000	There were no tasks to update!
+2019-02-26 13:10:08.750000	Processing NRDB App Requests.
+2019-02-26 13:10:10.199000	There were no tasks to update!
+2019-02-26 13:10:10.203000	Processing Communications Requests.
+2019-02-26 13:10:17.764000	There were no tasks to update!
+2019-02-26 14:53:54.665000	Processing PYC Apps Requests.
+2019-02-26 14:54:01.150000	There were no tasks to update!
+2019-02-26 14:54:01.154000	Processing AGOL Requests.
+2019-02-26 14:54:02.228000	There were no tasks to update!
+2019-02-26 14:54:02.231000	Processing NRDB App Requests.
+2019-02-26 14:54:03.473000	There were no tasks to update!
+2019-02-26 14:54:03.477000	Processing Communications Requests.
+2019-02-26 14:54:13.587000	There were no tasks to update!
+2019-02-26 15:00:00.765000	Processing PYC Apps Requests.
+2019-02-26 15:00:05.141000	There were no tasks to update!
+2019-02-26 15:00:05.145000	Processing AGOL Requests.
+2019-02-26 15:00:06.370000	There were no tasks to update!
+2019-02-26 15:00:06.380000	Processing NRDB App Requests.
+2019-02-26 15:00:07.317000	There were no tasks to update!
+2019-02-26 15:00:07.327000	Processing Communications Requests.
+2019-02-26 15:00:16.173000	There were no tasks to update!
+2019-02-26 15:10:00.905000	Processing PYC Apps Requests.
+2019-02-26 15:10:04.628000	There were no tasks to update!
+2019-02-26 15:10:04.633000	Processing AGOL Requests.
+2019-02-26 15:10:05.536000	There were no tasks to update!
+2019-02-26 15:10:05.541000	Processing NRDB App Requests.
+2019-02-26 15:10:06.635000	There were no tasks to update!
+2019-02-26 15:10:06.644000	Processing Communications Requests.
+2019-02-26 15:10:14.044000	There were no tasks to update!
+2019-02-26 15:20:00.920000	Processing PYC Apps Requests.
+2019-02-26 15:20:05.159000	The task was updated!
+2019-02-26 15:20:05.169000	Processing AGOL Requests.
+2019-02-26 15:20:08.121000	The task was updated!
+2019-02-26 15:20:08.125000	Processing NRDB App Requests.
+2019-02-26 15:20:12.272000	The task was updated!
+2019-02-26 15:20:12.274000	Processing Communications Requests.
+2019-02-26 15:20:19.409000	There were no tasks to update!
+2019-02-26 15:30:01.106000	Processing PYC Apps Requests.
+2019-02-26 15:30:04.215000	There were no tasks to update!
+2019-02-26 15:30:04.220000	Processing AGOL Requests.
+2019-02-26 15:30:05.627000	There were no tasks to update!
+2019-02-26 15:30:05.637000	Processing NRDB App Requests.
+2019-02-26 15:30:06.989000	There were no tasks to update!
+2019-02-26 15:30:06.998000	Processing Communications Requests.
+2019-02-26 15:30:14.270000	There were no tasks to update!
+2019-02-26 15:40:00.923000	Processing PYC Apps Requests.
+2019-02-26 15:40:09.314000	The task was updated!
+2019-02-26 15:40:16.924000	The task was updated!
+2019-02-26 15:40:16.933000	Processing AGOL Requests.
+2019-02-26 15:40:18.639000	There were no tasks to update!
+2019-02-26 15:40:18.648000	Processing NRDB App Requests.
+2019-02-26 15:40:19.982000	There were no tasks to update!
+2019-02-26 15:40:19.991000	Processing Communications Requests.
+2019-02-26 15:40:28.647000	There were no tasks to update!
+2019-02-26 15:50:00.925000	Processing PYC Apps Requests.
+2019-02-26 15:50:03.756000	There were no tasks to update!
+2019-02-26 15:50:03.766000	Processing AGOL Requests.
+2019-02-26 15:50:04.937000	There were no tasks to update!
+2019-02-26 15:50:04.947000	Processing NRDB App Requests.
+2019-02-26 15:50:06.062000	There were no tasks to update!
+2019-02-26 15:50:06.072000	Processing Communications Requests.
+2019-02-26 15:50:13.071000	There were no tasks to update!
+2019-02-26 16:00:01.075000	Processing PYC Apps Requests.
+2019-02-26 16:00:05.376000	The task was updated!
+2019-02-26 16:00:05.387000	Processing AGOL Requests.
+2019-02-26 16:00:09.399000	There were no tasks to update!
+2019-02-26 16:00:09.409000	Processing NRDB App Requests.
+2019-02-26 16:00:10.542000	There were no tasks to update!
+2019-02-26 16:00:10.553000	Processing Communications Requests.
+2019-02-26 16:00:20.267000	The task was updated!
+2019-02-26 16:10:00.942000	Processing PYC Apps Requests.
+2019-02-26 16:10:04.765000	There were no tasks to update!
+2019-02-26 16:10:04.775000	Processing AGOL Requests.
+2019-02-26 16:10:07.552000	There were no tasks to update!
+2019-02-26 16:10:07.555000	Processing NRDB App Requests.
+2019-02-26 16:10:09.231000	There were no tasks to update!
+2019-02-26 16:10:09.241000	Processing Communications Requests.
+2019-02-26 16:10:19.400000	There were no tasks to update!
+2019-02-26 16:20:00.955000	Processing PYC Apps Requests.
+2019-02-26 16:20:03.651000	There were no tasks to update!
+2019-02-26 16:20:03.662000	Processing AGOL Requests.
+2019-02-26 16:20:05.029000	There were no tasks to update!
+2019-02-26 16:20:05.036000	Processing NRDB App Requests.
+2019-02-26 16:20:06.709000	There were no tasks to update!
+2019-02-26 16:20:06.719000	Processing Communications Requests.
+2019-02-26 16:20:14.429000	There were no tasks to update!
+2019-02-26 16:26:09.713000	Processing PYC Apps Requests.
+2019-02-26 16:26:13.992000	The task was updated!
