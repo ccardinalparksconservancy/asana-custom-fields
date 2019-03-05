@@ -1,19 +1,115 @@
+""" Script to connect to Asana projects, read data from Notes field of tasks, and update custom fields with values contained in the data."""
+import sys
 import asana
 import datetime
-import re
 import threading
+
+#### globals ####
+# personal access token from asana developers portal: https://app.asana.com/0/1101638289721813/board
+# keep the PAT in an external file that is excluded from versioning (add to .gitignore)
+with open('asana-pat.txt', 'r') as f: 
+    pat = f.readline()
+
+# construct an Asana client
+client = asana.Client.access_token(pat)
+
+# specify the project IDs
+pycProjectId = 1101667914088903
+agolProjectId = 1101638289721813
+nrdbProjectId = 1107827681827126
+communicationsId = 1109168845883071
+
+# make a list of project Ids to iterate
+projectIds = [
+    ('PYC Apps Requests', pycProjectId), 
+    ('AGOL Requests', agolProjectId), 
+    ('NRDB App Requests', nrdbProjectId), 
+    ('Communications Requests', communicationsId)
+]
+
+# we're only concerned with tasks in the 'New Requests' board (for board layouts)
+sectionName = 'New Requests'
+
+# field names
+sectionNameField = 'name'
+gidField = 'gid'
+resourceSubtypeField = 'resource_subtype'
+nameField = 'name'  
+enumValueField = 'enum_value'
+customField = 'custom_field'
+customFields = 'custom_fields'
+notesField = 'notes'
+apiUpdatedField = 'api_updated'
+enumOptionsField = 'enum_options'
+typeField = 'type'
+customIdField = 'customFieldId'
+customValueIdField = 'customFieldValueId'
+ticketIdField = 'TicketId'
+
+# event field names
+evtActionField = 'action'
+evtActionVal = 'added'
+evtResourceField = 'resource'
+evtResourceTypeField = 'resource_type'
+evtResourceTypeVal = 'task'
+evtParentField = 'parent'
+evtSectionVal = 'section'
+evtNameField = 'name'
+
+#### helper functions ####
+def _getLayout(projectId):
+    # get the current project by Id
+    currentProject = client.projects.find_by_id(projectId)
+    # get the current project's layout, e.g. 'board' or 'list'
+    layout = currentProject['layout']
+    return layout
+
+
+def _getSectionGid(projectId):
+    # get all sections associated with the project
+    sections = client.sections.find_by_project(projectId)
+    # get only the section we care about -- 'New Requests'
+    section = [section for section in sections if section[sectionNameField] == sectionName][0]
+    # return the section global Id
+    if len(section) > 0:
+        return section[gidField]
+    raise Exception ('Did not find appropriate Section!')
+
+
+def _padTicketId(fieldValue):
+    splitValues = fieldValue.split('-')
+    if len(splitValues) < 2:
+        raise Exception('The field value for TicketId is malformed: {fieldValue}'.format(fieldValue = fieldValue))
+    else:
+        projectValue = splitValues[0]
+        idValue = splitValues[1].zfill(6)
+
+    newFieldValue = projectValue + '-' + idValue
+    return newFieldValue
+
+#### main functions ####
+def main():
+    # loop through each project
+    for project in projectIds:
+        # get the project name and Id
+        projectName = project[0]
+        projectId = project[1]
+
+        # call main function
+        processTasks(projectName, projectId)
+        
+        eventThread = threading.Thread(target=getEvents, args=(projectName, projectId, None,))
+        eventThread.start()
+
 
 def processTasks(projectName, projectId, taskGID=None):
     # start logging 
     print('Processing {proj}.'.format(proj = projectName))
-    log('Processing {proj}.'.format(proj = projectName))
+    log(projectName, 'Processing {proj}.'.format(proj = projectName))
 
     ## check to see if there are tasks that need updating
-    # first get the current project by Id
-    currentProject = client.projects.find_by_id(projectId)
-
     # get the current project's layout, e.g. 'board' or 'list'
-    layout = currentProject['layout']
+    layout = _getLayout(projectId)
 
     # first check if taskGID is set
     if taskGID is not None:
@@ -21,7 +117,7 @@ def processTasks(projectName, projectId, taskGID=None):
     # if board layout...
     elif (layout == 'board'):
         # get the section global Id (using global projectId)
-        sectionGid = getSectionGid(projectId)
+        sectionGid = _getSectionGid(projectId)
 
         # now find all tasks in the section
         # returns minimal information about tasks
@@ -83,31 +179,22 @@ def processTasks(projectName, projectId, taskGID=None):
 
                 if 'ticketId' in notesDict.keys():
                     print('The task ({ticketId}) was updated!').format(ticketId = notesDict[ticketIdField])
-                    log('The task ({ticketId}) was updated!'.format(ticketId = notesDict[ticketIdField]))
+                    log(projectName, 'The task ({ticketId}) was updated!'.format(ticketId = notesDict[ticketIdField]))
                 else:
                     print('The task was updated!')
-                    log('The task was updated!')
+                    log(projectName, 'The task was updated!')
 
             except Exception as e:
                 print(e)
                 print('There was a problem updating the fields in task via the API')
-                log('There was a problem updating the fields in task via the API')
+                log(projectName, 'There was a problem updating the fields in task via the API')
                 for key in apiData[customFields].keys():
                     print('{key}, {value}').format(key = key, value = apiData[customFields][key])
-                    log('{key}, {value}'.format(key = key, value = apiData[customFields][key]))
+                    log(projectName, '{key}, {value}'.format(key = key, value = apiData[customFields][key]))
     else:
         print('There were no tasks to update!')
-        log('There were no tasks to update!')
+        log(projectName, 'There were no tasks to update!')
 
-def getSectionGid(projectId):
-    # get all sections associated with the project
-    sections = client.sections.find_by_project(projectId)
-    # get only the section we care about -- 'New Requests'
-    section = [section for section in sections if section[sectionNameField] == sectionName][0]
-    # return the section global Id
-    if len(section) > 0:
-        return section[gidField]
-    raise Exception ('Did not find appropriate Section!')
 
 def getUpdateableTasks(tasks):
     # a list to store all tasks that need to be updated
@@ -134,6 +221,7 @@ def getUpdateableTasks(tasks):
             taskList.append(t)
     
     return taskList
+
 
 def parseCustomFieldSettings(customFieldSettings):
     # use a temporary dict to store custom field information
@@ -164,6 +252,7 @@ def parseCustomFieldSettings(customFieldSettings):
     
     return cfDict
 
+
 def parseNotes(notes):
     # first deal with ||| if any - caused by fields in Forms with no values
     # by adding a space between first and second |
@@ -183,21 +272,11 @@ def parseNotes(notes):
             fieldLabel = tmpList[0].strip()
             fieldValue = tmpList[1].strip()
             if fieldLabel == ticketIdField:
-                fieldValue = padTicketId(fieldValue)
+                fieldValue = _padTicketId(fieldValue)
             tmpDict[fieldLabel] = fieldValue
 
     return tmpDict
 
-def padTicketId(fieldValue):
-    splitValues = fieldValue.split('-')
-    if len(splitValues) < 2:
-        raise Exception('The field value for TicketId is malformed: {fieldValue}'.format(fieldValue = fieldValue))
-    else:
-        projectValue = splitValues[0]
-        idValue = splitValues[1].zfill(6)
-
-    newFieldValue = projectValue + '-' + idValue
-    return newFieldValue
 
 def getCustomFieldData(notesDict, customFieldDict):
     # initialize dict to hold custom field data
@@ -232,110 +311,73 @@ def getCustomFieldData(notesDict, customFieldDict):
 
     return data
 
-def log(text):
+
+def log(projectName, text):
     logFile = './logs/asana-log.txt'
     timestamp = datetime.datetime.now()
     with open(logFile, 'a+') as log:
-        logText = '{ts}\t{t}\n'.format(ts = timestamp, t = text)
+        logText = '{ts}\t{proj}\t{t}\n'.format(ts = timestamp, proj=projectName, t = text)
         log.write(logText)
+
 
 def getEvents(projectName, projectId, sync):
     print('Starting {proj} thread!'.format(proj=projectName))
+    log(projectName, 'Starting {proj} thread!'.format(proj=projectName))
 
     if sync is None:
         result = client.events.get_next({ 'resource': projectId })
     else:
         result = client.events.get_next({ 'resource': projectId, 'sync': sync })
-    events = result[0]
+    
+    if (len(result) == 2):
+        # get the events from the first item in the tuple
+        events = result[0]
+        # get the sync token from the second item in the tuple
+        sync = result[1]
 
-    # get the current project by Id
-    currentProject = client.projects.find_by_id(projectId)
-    # get the current project's layout, e.g. 'board' or 'list'
-    layout = currentProject['layout']
+        # get the layout of the project
+        layout = _getLayout(projectId)
 
-    # if board layout, filter for parent == section to reduce duplicates
-    if (layout == 'board'):
-        addedTaskEvents = [
-            event for event in events if event['action'] == 'added' 
-            and event['resource']['resource_type'] == 'task' 
-            and event['parent']['resource_type'] == 'section' 
-            and event['parent']['name'] == sectionName
-        ]
-    # otherwise list layout - cannot filter by sections
+        # if board layout, filter for parent == section to reduce duplicates
+        if (layout == 'board'):
+            addedTaskEvents = [
+                event for event in events if event[evtActionField] == evtActionVal 
+                and event[evtResourceField][evtResourceTypeField] == evtResourceTypeVal 
+                and event[evtParentField][evtResourceTypeField] == evtSectionVal 
+                and event[evtParentField][evtNameField] == sectionName
+            ]
+        # otherwise list layout - cannot filter by sections
+        else:
+            addedTaskEvents = [
+                event for event in events if event[evtActionField] == evtActionVal
+                and event[evtResourceField][evtResourceTypeField] == evtResourceTypeVal 
+            ]
+
+        if len(addedTaskEvents) > 0:
+            taskGIDs = [event[evtResourceField][gidField] for event in addedTaskEvents]
+            log(projectName, 'The following task GID(s) will be updated {tasks}.'.format(tasks=taskGIDs))
+            print(taskGIDs)
+            print(addedTaskEvents)
+            for tGID in taskGIDs:
+                processTasks(projectName, projectId, tGID)
+        else:
+            log(projectName, 'There were no added tasks to update!')
+            log(projectName, '{events}'.format(events=events))
     else:
-        addedTaskEvents = [
-            event for event in events if event['action'] == 'added' 
-            and event['resource']['resource_type'] == 'task' 
-        ]
+        print('Not able to get events data or sync token from results: {results}'.format(results=result))
+        log(projectName, 'Not able to get events data or sync token from results: {results}'.format(results=result))
+        log(projectName, '{info}'.format(info=sys.exc_info()))
 
-    if len(addedTaskEvents) > 0:
-        taskGIDs = [event['resource']['gid'] for event in addedTaskEvents]
-        print(taskGIDs)
-        print(addedTaskEvents)
-        for tGID in taskGIDs:
-            processTasks(projectName, projectId, tGID)
-
-    sync = result[1]
     eventThread = threading.Thread(target=getEvents, args=(projectName, projectId, sync))
     eventThread.start()
 
-'''
-PyInstaller:
-    - find warnings: C:\Users\ccardinal\source\repos\python\asana-custom-fields\build\update-new-tasks\warn-update-new-tasks.txt
-    - build a single executable file:
-        pyinstaller --onefile --clean --noconfirm --paths "C:\Users\ccardinal\source\repos\python\asana-custom-fields\venv\Lib\site-packages" update-new-tasks.py
-'''
+
+""" PyInstaller
+    Instructions:
+        - find warnings: C:\Users\ccardinal\source\repos\python\asana-custom-fields\build\update-new-tasks\warn-update-new-tasks.txt
+        - build a single executable file:
+        pyinstaller --onefile --clean --noconfirm --paths "C:\Users\ccardinal\source\repos\python\asana-custom-fields\venv\Lib\site-packages" asana_tasks.py
+"""
 
 if __name__ == '__main__':
-    # personal access token from asana developers portal: https://app.asana.com/0/1101638289721813/board
-    # keep the PAT in an external file that is excluded from versioning (add to .gitignore)
-    with open('asana-pat.txt', 'r') as f: 
-        pat = f.readline()
-
-    # construct an Asana client
-    client = asana.Client.access_token(pat)
-
-    # specify the project IDs
-    pycProjectId = 1101667914088903
-    agolProjectId = 1101638289721813
-    nrdbProjectId = 1107827681827126
-    communicationsId = 1109168845883071
-
-    # make a list of project Ids to iterate
-    projectIds = [
-        ('PYC Apps Requests', pycProjectId), 
-        ('AGOL Requests', agolProjectId), 
-        ('NRDB App Requests', nrdbProjectId), 
-        ('Communications Requests', communicationsId)
-    ]
-
-    # we're only concerned with tasks in the 'New Requests' board (for board layouts)
-    sectionName = 'New Requests'
-
-    # field names
-    sectionNameField = 'name'
-    gidField = 'gid'
-    resourceSubtypeField = 'resource_subtype'
-    nameField = 'name'  
-    enumValueField = 'enum_value'
-    customField = 'custom_field'
-    customFields = 'custom_fields'
-    notesField = 'notes'
-    apiUpdatedField = 'api_updated'
-    enumOptionsField = 'enum_options'
-    typeField = 'type'
-    customIdField = 'customFieldId'
-    customValueIdField = 'customFieldValueId'
-    ticketIdField = 'TicketId'
-
-    # loop through each project
-    for project in projectIds:
-        # get the project name and Id
-        projectName = project[0]
-        projectId = project[1]
-
-        # call main function
-        #processTasks(projectName, projectId)
-        
-        eventThread = threading.Thread(target=getEvents, args=(projectName, projectId, None,))
-        eventThread.start()
+    main()
