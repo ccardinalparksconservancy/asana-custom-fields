@@ -1,13 +1,27 @@
+#### folders ####
+# ignore the virtual environment
 venv/
-.ipynb_checkpoints/
+# Visual Studio Code files
 .vscode/
+# files made during the creation of a Windows executable from the Python script
 build/
+# log files
 logs/
-__pycache__/  # Exclude the whole folder
+# Exclude the whole folder ??
+__pycache__/
+# jupyter notebook checkpoints
+.ipynb_checkpoints/
+####
 
-*.py[cod]     # Will match .pyc, .pyo and .pyd files.
-*.pyc
+#### files ####
+# match .pyc, .pyo and .pyd files
+*.py[cod]
+# made by pyinstaller
 *.spec
+# jupyter notebooks - may contain private data
 *.ipynb
+# text file contains the authentication token
 asana-pat.txt
+# example curl requests - contains the PAT
 asana-api-curl.txt
+####
