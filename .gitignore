@@ -1,6 +1,7 @@
 #### folders ####
 # ignore the virtual environment
 venv/
+venv3/
 # Visual Studio Code files
 .vscode/
 # files made during the creation of a Windows executable from the Python script

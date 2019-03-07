@@ -1,0 +1,5 @@
+PyInstaller
+Instructions:
+    - find warnings: C:\Users\ccardinal\source\repos\python\asana-custom-fields\build\update-new-tasks\warn-update-new-tasks.txt
+    - build a single executable file:
+    pyinstaller --onefile --clean --noconfirm --paths "C:\Users\ccardinal\source\repos\python\asana-custom-fields\venv\Lib\site-packages" asana_tasks.py

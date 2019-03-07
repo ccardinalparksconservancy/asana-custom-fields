@@ -3,6 +3,29 @@ import sys
 import asana
 import datetime
 import threading
+import time
+
+#### threading class ####
+class EventThread(threading.Thread):
+    def __init__(self, projectName, projectId, sync):
+        threading.Thread.__init__(self)
+        self.projectName = projectName
+        self.projectId = projectId
+        self.sync = sync
+
+
+    def _wrap_run(self):
+        try:
+            getEvents(self.projectName, self.projectId, self.sync)
+        except:
+            print('Network error: waiting one minute...')
+            time.sleep(60)
+            self._wrap_run()
+
+
+    def run(self):
+        self._wrap_run()
+
 
 #### globals ####
 # personal access token from asana developers portal: https://app.asana.com/0/1101638289721813/board
@@ -96,11 +119,12 @@ def main():
         projectId = project[1]
 
         # call main function
-        processTasks(projectName, projectId)
+        #processTasks(projectName, projectId)
         
-        eventThread = threading.Thread(target=getEvents, args=(projectName, projectId, None,))
-        eventThread.start()
-
+        # eventThread = threading.Thread(target=getEvents, args=(projectName, projectId, None,))
+        #eventThread.start()
+        EventThread(projectName, projectId, None,).start()
+        
 
 def processTasks(projectName, projectId, taskGID=None):
     # start logging 
@@ -368,16 +392,9 @@ def getEvents(projectName, projectId, sync):
         log(projectName, 'Not able to get events data or sync token from results: {results}'.format(results=result))
         log(projectName, '{info}'.format(info=sys.exc_info()))
 
-    eventThread = threading.Thread(target=getEvents, args=(projectName, projectId, sync))
-    eventThread.start()
-
-
-""" PyInstaller
-    Instructions:
-        - find warnings: C:\Users\ccardinal\source\repos\python\asana-custom-fields\build\update-new-tasks\warn-update-new-tasks.txt
-        - build a single executable file:
-        pyinstaller --onefile --clean --noconfirm --paths "C:\Users\ccardinal\source\repos\python\asana-custom-fields\venv\Lib\site-packages" asana_tasks.py
-"""
+    # eventThread = threading.Thread(target=getEvents, args=(projectName, projectId, sync))
+    # eventThread.start()
+    EventThread(projectName, projectId, None,).start()
 
 if __name__ == '__main__':
     main()
